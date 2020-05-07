@@ -1896,6 +1896,12 @@ const interval = 10000;
 const timeout = 60 * 60 * 1000;
 const baseUrl = hostname ? `https://$hostname` : "https://nexploit.app";
 let restc = new rm.RestClient("GitHub Actions", baseUrl);
+function printDescriptionForIssues(issues) {
+    core.info("Issues were found:");
+    for (let issue of issues) {
+        core.info(`${issue.number} of ${issue.type}`);
+    }
+}
 function getStatus(token, uuid) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -1938,6 +1944,7 @@ function waitFor(uuid) {
                 const url = `https://nexploit.app/scans/${uuid}`;
                 if (stop == true) {
                     core.setFailed(`Issues were found. See on ${url}`);
+                    printDescriptionForIssues(status.issuesBySeverity);
                     return Promise.resolve({
                         done: true,
                     });

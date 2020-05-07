@@ -26,6 +26,14 @@ interface IssuesBySeverity {
   type: string;
 }
 
+function printDescriptionForIssues(issues: IssuesBySeverity[]) {
+  core.info("Issues were found:");
+
+  for (let issue of issues) {
+    core.info(`${issue.number} of ${issue.type}`);
+  }
+}
+
 async function getStatus(token: string, uuid: string): Promise<Status> {
   try {
     let options = { additionalHeaders: { Authorization: `Api-Key ${token}` } };
@@ -76,6 +84,7 @@ async function waitFor(uuid: string) {
 
           if (stop == true) {
             core.setFailed(`Issues were found. See on ${url}`);
+            printDescriptionForIssues(status.issuesBySeverity);
             return Promise.resolve({
               done: true,
             });

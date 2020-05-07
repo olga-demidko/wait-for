@@ -13,7 +13,6 @@ jobs:
       uses: NeuraLegion/run-scan@master
       with:
         api_token: ${{ secrets.NEXPLOIT_TOKEN }}
-#       restart_scan: ai3LG8DmVn9Rn1YeqCNRGQ
         name: GitHub scan ${{ github.sha }}
         discovery_types: |
           [ "crawler", "archive" ]
@@ -32,4 +31,4 @@ jobs:
         api_token: ${{ secrets.NEXPLOIT_TOKEN }}
         scan: ${{ steps.start.outputs.id }}
         wait_for: any
-        timeout: 300
+        timeout: 55

@@ -1410,7 +1410,7 @@ const hostname = core.getInput("hostname");
 const waitFor__ = core.getInput("wait_for");
 const waitFor_ = waitFor__;
 const interval = 20000;
-const timeout = Number(core.getInput("timeout"));
+const timeout = 1000 * Number(core.getInput("timeout"));
 const baseUrl = hostname ? `https://$hostname` : "https://nexploit.app";
 let restc = new rm.RestClient("GitHub Actions", baseUrl);
 function printDescriptionForIssues(issues) {

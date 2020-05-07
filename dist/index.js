@@ -1409,14 +1409,14 @@ const scanId = core.getInput("scan");
 const hostname = core.getInput("hostname");
 const waitFor__ = core.getInput("wait_for");
 const waitFor_ = waitFor__;
-const interval = 10000;
-const timeout = 60 * 60 * 1000;
+const interval = 20000;
+const timeout = Number(core.getInput("timeout"));
 const baseUrl = hostname ? `https://$hostname` : "https://nexploit.app";
 let restc = new rm.RestClient("GitHub Actions", baseUrl);
 function printDescriptionForIssues(issues) {
     core.info("Issues were found:");
     for (let issue of issues) {
-        core.info(`${issue.number} of ${issue.type}`);
+        core.info(`${issue.number} ${issue.type} issues`);
     }
 }
 function getStatus(token, uuid) {

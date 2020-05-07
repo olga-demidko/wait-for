@@ -10,8 +10,9 @@ const hostname = core.getInput("hostname");
 
 const waitFor__ = core.getInput("wait_for");
 const waitFor_ = <Severity>waitFor__;
-const interval = 10000;
-const timeout = 60 * 60 * 1000;
+
+const interval = 20000;
+const timeout = 1000 * Number(core.getInput("timeout"));
 
 const baseUrl = hostname ? `https://$hostname` : "https://nexploit.app";
 let restc: rm.RestClient = new rm.RestClient("GitHub Actions", baseUrl);
@@ -30,7 +31,7 @@ function printDescriptionForIssues(issues: IssuesBySeverity[]) {
   core.info("Issues were found:");
 
   for (let issue of issues) {
-    core.info(`${issue.number} of ${issue.type}`);
+    core.info(`${issue.number} ${issue.type} issues`);
   }
 }
 

@@ -72,8 +72,6 @@ async function getStatus(token: string, uuid: string): Promise<Status> {
 waitFor(scanId);
 
 async function waitFor(uuid: string) {
-  console.log("Scan was created " + uuid);
-
   poll
     .asyncPoll(
       async (): Promise<poll.AsyncData<any>> => {

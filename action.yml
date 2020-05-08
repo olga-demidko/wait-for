@@ -1,7 +1,7 @@
-name: 'Nexploit Scan'
-description: 'Run a Nexploit scan right in GitHub Action'
+name: 'Nexploit Stop Scan'
+description: 'Stops Nexploit Scan'
 branding:
-  icon: clock
+  icon: stop-circle
   color: blue
 inputs:
   api_token:
@@ -13,17 +13,6 @@ inputs:
   hostname:
     description: 'Hostname. Default is nexploit.app'
     required: false
-  wait_for:
-    description: 'Wait for first issue: *any*, *medium*, *high*'
-    required: true
-  timeout:
-    description: Time in seconds for the action to wait for issues
-    required: false
-    default: 600
-
-outputs:
-  url:
-    description: 'Url of the resulting scan'
 runs:
   using: 'node12'
   main: 'dist/index.js'

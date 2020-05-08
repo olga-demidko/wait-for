@@ -8,9 +8,60 @@ This action runs a new scan in Nexploit, or reruns an existing one.
 
 **Required** Api Token. You can generate it in *Organization* section
 
-### `scan`
+### `restart_scan`
 
 Scan ID to restart.
+
+### `file_id`
+
+HAR-file ID.
+
+### `discovery_types`
+
+Array of discovery types. Can be: archive, crawler, oas.
+
+Example:
+
+```yml
+discovery_types: |
+  [ "crawler", "archive" ]
+```
+
+### `crawler_urls`
+
+Crawler URLs
+
+Example:
+
+```yml
+crawler_urls: |
+  [ "http://vulnerable-bank.com" ]
+```
+
+### `module`
+
+Possible values: *core*, *exploratory*
+
+### `hosts_filter`
+
+Hosts filter
+
+### `name`
+
+Scan name.
+
+Example: ```name: GitHub scan ${{ github.sha }}```
+
+### `wait_for`
+
+Stops step and sets a failure if the scan founds an issue: `on_any` issue,
+`on_medium` or `on_high`
+
+## Outputs
+
+### `url`
+
+Url of the resulting scan
 
 ## Example usage
 

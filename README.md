@@ -1,6 +1,6 @@
-# Wait for Nexploit Scan to Find Something
+# Nexploit Scan Runner
 
-This action waits until Nexploit finds an issue, or until timeout.
+This action runs a new scan in Nexploit, or reruns an existing one.
 
 ## Inputs
 
@@ -8,23 +8,54 @@ This action waits until Nexploit finds an issue, or until timeout.
 
 **Required** Api Token. You can generate it in *Organization* section
 
-### `scan`
+### `restart_scan`
 
-Scan ID to wait.
+Scan ID to restart.
 
-### `wait_for`
+### `file_id`
 
-Wait for first issue: *any*, *medium*, *high*
+HAR-file ID.
+
+### `discovery_types`
+
+Array of discovery types. Can be: archive, crawler, oas.
 
 Example:
 
 ```yml
-wait_for: any
+discovery_types: |
+  [ "crawler", "archive" ]
 ```
 
-### `timeout`
+### `crawler_urls`
 
-Time in seconds for the action to wait for issues
+Crawler URLs
+
+Example:
+
+```yml
+crawler_urls: |
+  [ "http://vulnerable-bank.com" ]
+```
+
+### `module`
+
+Possible values: *core*, *exploratory*
+
+### `hosts_filter`
+
+Hosts filter
+
+### `name`
+
+Scan name.
+
+Example: ```name: GitHub scan ${{ github.sha }}```
+
+### `wait_for`
+
+Stops step and sets a failure if the scan founds an issue: `on_any` issue,
+`on_medium` or `on_high`
 
 ## Outputs
 
@@ -34,33 +65,40 @@ Url of the resulting scan
 
 ## Example usage
 
+Start a new scan with parameters
+
 ```yml
-start_and_wait_scan:
-  runs-on: ubuntu-latest
-  name: A job to run a Nexploit scan
-  steps:
-  - name: Start Nexploit Scan 🏁
-    id: start
-    uses: NeuraLegion/run-scan@v1
-    with:
-      api_token: ${{ secrets.NEXPLOIT_TOKEN }}
-      name: GitHub scan ${{ github.sha }}
-      discovery_types: |
-        [ "crawler", "archive" ]
-      crawler_urls: |
-        [ "https://juice-shop.herokuapp.com" ]
-      file_id: LiYknMYSdbSZbqgMaC9Sj
-      hosts_filter: |
-        [ ]
-      wait_for: on_high
-  - name: Get the output scan url
-    run: echo "The scan was started on ${{ steps.start.outputs.url }}"
-  - name: Wait for any issues ⏳
-    id: wait
-    uses: NeuraLegion/wait-for@v1
-    with:
-      api_token: ${{ secrets.NEXPLOIT_TOKEN }}
-      scan: ${{ steps.start.outputs.id }}
-      wait_for: any
-      timeout: 55
+steps:
+    - name: Start Nexploit Scan
+      id: start
+      uses: NeuraLegion/run-scan@v0.2
+      with:
+        api_token: ${{ secrets.NEXPLOIT_TOKEN }}
+        name: GitHub scan ${{ github.sha }}
+        discovery_types: |
+          [ "crawler", "archive" ]
+        crawler_urls: |
+          [ "http://vulnerable-bank.com" ]
+        file_id: LiYknMYSdbSZbqgMaC9Sj
+        hosts_filter: |
+          [ ]
+        wait_for: on_any
+    - name: Get the output scan url
+      run: echo "The scan was started on ${{ steps.start.outputs.url }}"
+```
+
+Restart an existing scan
+
+```yml
+steps:
+    - name: Start Nexploit Scan
+      id: start
+      uses: NeuraLegion/run-scan@v0.2
+      with:
+        api_token: ${{ secrets.NEXPLOIT_TOKEN }}
+        name: GitHub scan ${{ github.sha }}
+        restart_scan: ai3LG8DmVn9Rn1YeqCNRGQ
+        wait_for: on_any
+    - name: Get the output scan url
+      run: echo "The scan was started on ${{ steps.start.outputs.url }}"
 ```

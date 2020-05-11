@@ -4,7 +4,7 @@ on:
       - master
 
 jobs:
-  start_scan:
+  start_and_wait_scan:
     runs-on: ubuntu-latest
     name: A job to run a Nexploit scan
     steps:

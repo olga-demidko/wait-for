@@ -1,4 +1,4 @@
-name: 'Nexploit Scan'
+name: Nexploit Wait for Issues
 description: 'Run a Nexploit scan right in GitHub Action'
 branding:
   icon: clock

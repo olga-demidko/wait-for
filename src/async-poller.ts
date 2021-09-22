@@ -13,7 +13,7 @@
  */
 export interface AsyncData<T> {
   done: boolean;
-  data?: T;
+  data?: T | PromiseLike<T>;
 }
 
 /**
@@ -85,22 +85,22 @@ export async function asyncPoll<T>(
    */
   pollTimeout: number = 30 * 1000
 ): Promise<T> {
-  const endTime = new Date().getTime() + pollTimeout;
-  const checkCondition = (resolve: Function, reject: Function): void => {
+  const endTime = Date.now() + pollTimeout;
+  const checkCondition = (resolve: (value: T | PromiseLike<T>) => void, reject: (reason: any) => void): void => {
     Promise.resolve(fn())
-      .then((result) => {
-        const now = new Date().getTime();
-        if (result.done) {
+      .then(result => {
+        const now = Date.now();
+
+        if (result.done && result.data) {
           resolve(result.data);
         } else if (now < endTime) {
           setTimeout(checkCondition, pollInterval, resolve, reject);
         } else {
-          reject(new Error("AsyncPoller: reached timeout"));
+          reject(new Error('AsyncPoller: reached timeout'));
         }
       })
-      .catch((err) => {
-        reject(err);
-      });
+      .catch(err => reject(err));
   };
+
   return new Promise(checkCondition);
 }

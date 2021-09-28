@@ -86,7 +86,10 @@ export async function asyncPoll<T>(
   pollTimeout: number = 30 * 1000
 ): Promise<T> {
   const endTime = Date.now() + pollTimeout;
-  const checkCondition = (resolve: (value: T | PromiseLike<T>) => void, reject: (reason: any) => void): void => {
+  const checkCondition = (
+    resolve: (value: T | PromiseLike<T>) => void,
+    reject: (reason: any) => void
+  ): void => {
     Promise.resolve(fn())
       .then(result => {
         const now = Date.now();
@@ -99,7 +102,9 @@ export async function asyncPoll<T>(
           reject(new Error('AsyncPoller: reached timeout'));
         }
       })
-      .catch(err => reject(err));
+      .catch(err => {
+        reject(err);
+      });
   };
 
   return new Promise(checkCondition);

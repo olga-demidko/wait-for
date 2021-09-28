@@ -1,6 +1,6 @@
+import { asyncPoll, AsyncData } from './async-poller';
 import * as core from '@actions/core';
 import { RestClient } from 'typed-rest-client/RestClient';
-import { asyncPoll, AsyncData } from './async-poller';
 
 type Severity = 'any' | 'medium' | 'high';
 
@@ -37,23 +37,26 @@ const run = (uuid: string) =>
       const url = `${baseUrl}/scans/${uuid} `;
       const result: AsyncData<any> = {
         data,
-        done: true,
+        done: true
       };
 
       if (stop) {
         core.setFailed(`Issues were found. See on ${url} `);
         printDescriptionForIssues(issuesBySeverity);
+
         return result;
       }
 
       switch (data) {
         case 'failed':
           core.setFailed(`Scan failed. See on ${url} `);
+
           return result;
         case 'stopped':
           return result;
         default:
           result.done = false;
+
           return result;
       }
     },
@@ -67,7 +70,7 @@ const getStatus = async (uuid: string): Promise<Status | never> => {
 
     return {
       status: restRes.result ? restRes.result.status : '',
-      issuesBySeverity: restRes.result ? restRes.result.issuesBySeverity : [],
+      issuesBySeverity: restRes.result ? restRes.result.issuesBySeverity : []
     };
   } catch (err: any) {
     const message = `Failed (${err.statusCode}) ${err.message}`;
@@ -76,7 +79,10 @@ const getStatus = async (uuid: string): Promise<Status | never> => {
   }
 };
 
-const issueFound = (severity: Severity, issues: IssuesBySeverity[]): boolean => {
+const issueFound = (
+  severity: Severity,
+  issues: IssuesBySeverity[]
+): boolean => {
   let types: string[];
 
   if (severity === 'any') {
